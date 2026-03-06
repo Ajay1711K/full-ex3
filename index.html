@@ -1,209 +1,315 @@
 <!DOCTYPE html>
-<html lang="en">
+<html ng-app="taskApp">
 <head>
-    <meta charset="UTF-8">
-    <title>KCET Learning - Quiz App</title>
+<meta charset="UTF-8">
+<title>TaskMaster Hub</title>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
 
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+/* -------- GLOBAL -------- */
+body{
+  margin:0;
+  font-family:Segoe UI, Arial;
+  background:linear-gradient(120deg,#4facfe,#00f2fe);
+  color:white;
+}
 
-    <style>
-        body {
-            background: linear-gradient(135deg, #0d6efd, #6610f2);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-        }
-        .card {
-            border-radius: 15px;
-            padding: 30px;
-        }
-    </style>
+/* -------- APP LAYOUT -------- */
+.app{
+  display:flex;
+  height:100vh;
+}
+
+/* -------- SIDEBAR -------- */
+.sidebar{
+  width:220px;
+  background:#0f172a;
+  padding:20px;
+  box-shadow:2px 0 10px rgba(0,0,0,0.3);
+}
+.sidebar h2{
+  text-align:center;
+  margin-bottom:30px;
+  color:#38bdf8;
+}
+
+.menu{
+  margin:12px 0;
+  padding:12px;
+  border-radius:8px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.menu:hover{
+  background:#1e293b;
+  padding-left:18px;
+}
+
+/* -------- MAIN AREA -------- */
+.main{
+  flex:1;
+  padding:30px 40px;
+}
+
+/* -------- TOP BAR -------- */
+.topbar{
+  font-size:24px;
+  font-weight:bold;
+  margin-bottom:25px;
+}
+
+/* -------- DASHBOARD -------- */
+.dashboard{
+  display:flex;
+  gap:20px;
+  margin-bottom:25px;
+}
+
+.card{
+  flex:1;
+  background:rgba(255,255,255,0.15);
+  padding:25px;
+  border-radius:15px;
+  text-align:center;
+  backdrop-filter: blur(10px);
+  box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* -------- INPUT -------- */
+.addBox{
+  display:flex;
+  margin:20px 0;
+}
+
+.addBox input{
+  flex:1;
+  padding:12px;
+  border:none;
+  border-radius:10px 0 0 10px;
+  outline:none;
+}
+
+.addBox button{
+  padding:12px 20px;
+  border:none;
+  background:#22c55e;
+  color:white;
+  font-weight:bold;
+  border-radius:0 10px 10px 0;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.addBox button:hover{
+  background:#16a34a;
+}
+
+/* -------- TASK CARD -------- */
+.task{
+  background:white;
+  color:black;
+  padding:15px;
+  border-radius:12px;
+  margin-bottom:12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  transition:0.25s;
+  box-shadow:0 4px 10px rgba(0,0,0,0.15);
+}
+
+.task:hover{
+  transform:scale(1.02);
+}
+
+.done{
+  text-decoration:line-through;
+  color:gray;
+}
+
+/* -------- BUTTONS -------- */
+.btn{
+  border:none;
+  padding:7px 12px;
+  border-radius:6px;
+  margin-left:5px;
+  cursor:pointer;
+  color:white;
+  transition:0.3s;
+}
+
+.edit{
+  background:#3b82f6;
+}
+
+.edit:hover{
+  background:#2563eb;
+}
+
+.delete{
+  background:#ef4444;
+}
+
+.delete:hover{
+  background:#dc2626;
+}
+
+/* -------- FILTER -------- */
+.filter button{
+  margin-right:10px;
+  margin-bottom:10px;
+  border:none;
+  padding:8px 16px;
+  border-radius:20px;
+  cursor:pointer;
+  background:#0f172a;
+  color:white;
+  transition:0.3s;
+}
+
+.filter button:hover{
+  background:#1e293b;
+}
+/* -------- TASK CARD -------- */
+.task{
+  background:white;
+  color:black;
+  padding:15px;
+  border-radius:12px;
+  margin-bottom:12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  transition:0.3s;
+}
+.task:hover{
+  transform:scale(1.02);
+}
+.done{
+  text-decoration:line-through;
+  color:gray;
+}
+
+/* -------- BUTTONS -------- */
+.btn{
+  border:none;
+  padding:6px 10px;
+  border-radius:6px;
+  margin-left:5px;
+  cursor:pointer;
+  color:white;
+}
+.edit{background:#3b82f6;}
+.delete{background:#ef4444;}
+.filter button{
+  margin-right:10px;
+  margin-bottom:10px;
+  border:none;
+  padding:8px 15px;
+  border-radius:20px;
+  cursor:pointer;
+  background:#111827;
+  color:white;
+}
+
+</style>
 </head>
-<body>
 
-<div class="container">
+<body ng-controller="taskCtrl">
 
-    <!-- WELCOME SECTION -->
-    <div id="welcome-section" class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow text-center">
-                <h2 class="text-primary mb-3">Welcome to KCET Learning 🎓</h2>
+<div class="app">
 
-                <p class="fs-5">
-                    Test your knowledge with our interactive quiz.<br>
-                    Click the button below to begin!
-                </p>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>TaskMaster</h2>
+    <div class="menu">Dashboard</div>
+    <div class="menu">Tasks</div>
+    <div class="menu">Settings</div>
+  </div>
 
-                <button id="startBtn" class="btn btn-primary btn-lg mt-3">
-                    Next ➡️
-                </button>
-            </div>
-        </div>
+  <!-- Main -->
+  <div class="main">
+
+    <div class="topbar">My Tasks</div>
+
+    <!-- Dashboard -->
+    <div class="dashboard">
+      <div class="card">Total Tasks<br><h2>{{tasks.length}}</h2></div>
+      <div class="card">Completed<br><h2>{{completedCount()}}</h2></div>
+      <div class="card">Pending<br><h2>{{pendingCount()}}</h2></div>
     </div>
 
-    <!-- QUIZ SECTION -->
-    <div id="quiz-section" class="row justify-content-center d-none">
-        <div class="col-md-8">
-            <div class="card shadow">
-
-                <h4 class="text-center text-primary mb-4">
-                    KCET Learning – Quiz Application
-                </h4>
-
-                <h5 id="question"></h5>
-                <div id="options" class="my-3"></div>
-
-                <div class="d-flex justify-content-between">
-                    <button id="prevBtn" class="btn btn-secondary">Previous</button>
-                    <button id="nextBtn" class="btn btn-primary">Next</button>
-                </div>
-            </div>
-        </div>
+    <!-- Add Task -->
+    <div class="addBox">
+      <input type="text" ng-model="newTask" placeholder="Enter task...">
+      <button ng-click="addTask()">Add</button>
     </div>
 
-    <!-- RESULT SECTION -->
-    <div id="result-section" class="row justify-content-center d-none">
-        <div class="col-md-6">
-            <div class="card shadow text-center">
-                <h4 class="mb-3">Quiz Completed 🎉</h4>
-
-                <p id="correctCount" class="fw-bold text-success"></p>
-                <p id="wrongCount" class="fw-bold text-danger"></p>
-                <p id="totalCount" class="fw-bold"></p>
-
-                <button id="restartBtn" class="btn btn-success mt-3">
-                    Restart Quiz
-                </button>
-            </div>
-        </div>
+    <!-- Filter -->
+    <div class="filter">
+      <button ng-click="status=''">All</button>
+      <button ng-click="status=false">Pending</button>
+      <button ng-click="status=true">Completed</button>
     </div>
 
+    <!-- Tasks -->
+    <div class="task" ng-repeat="t in tasks | filter:{done:status}">
+      
+      <div>
+        <input type="checkbox" ng-model="t.done">
+        <span ng-class="{'done':t.done}">
+          {{t.name}}
+        </span>
+      </div>
+
+      <div>
+        <button class="btn edit" ng-click="editTask(t)">Edit</button>
+        <button class="btn delete" ng-click="deleteTask($index)">Delete</button>
+      </div>
+
+    </div>
+
+  </div>
 </div>
 
 <script>
-$(document).ready(function () {
+angular.module("taskApp",[])
+.controller("taskCtrl",function($scope){
 
-    /* ================= START BUTTON ================= */
-    $("#startBtn").click(function () {
-        $("#welcome-section").hide();
-        $("#quiz-section").removeClass("d-none");
-        loadQuestion();
-    });
+$scope.tasks=[
+  {name:"Design UI",done:false},
+  {name:"Write Code",done:true},
+  {name:"Test App",done:false}
+];
 
-    /* ================= QUIZ DATA ================= */
-    const quizData = [
-        {
-            question: "What does HTML stand for?",
-            options: [
-                "Hyper Text Markup Language",
-                "High Text Machine Language",
-                "Hyperlinks and Text Markup Language",
-                "Home Tool Markup Language"
-            ],
-            correct: 0
-        },
-        {
-            question: "Which language is used for styling web pages?",
-            options: ["HTML", "CSS", "JavaScript", "Python"],
-            correct: 1
-        },
-        {
-            question: "Which library is used to simplify JavaScript DOM manipulation?",
-            options: ["Bootstrap", "Angular", "jQuery", "React"],
-            correct: 2
-        },
-        {
-            question: "Which HTML tag is used to create a hyperlink?",
-            options: ["<a>", "<link>", "<href>", "<url>"],
-            correct: 0
-        },
-        {
-            question: "Which symbol is used to select an ID in CSS?",
-            options: [".", "#", "*", "&"],
-            correct: 1
-        }
-    ];
+// add
+$scope.addTask=function(){
+  if($scope.newTask){
+    $scope.tasks.push({name:$scope.newTask,done:false});
+    $scope.newTask="";
+  }
+};
 
-    let currentIndex = 0;
-    let userAnswers = [];
+// delete
+$scope.deleteTask=function(i){
+  $scope.tasks.splice(i,1);
+};
 
-    function loadQuestion() {
-        let q = quizData[currentIndex];
-        $("#question").text(`Q${currentIndex + 1}. ${q.question}`);
-        $("#options").empty();
+// edit
+$scope.editTask=function(task){
+  let updated=prompt("Edit Task",task.name);
+  if(updated!==null) task.name=updated;
+};
 
-        $.each(q.options, function (i, option) {
-            let checked = userAnswers[currentIndex] === i ? "checked" : "";
-            $("#options").append(`
-                <div class="form-check">
-                    <input type="radio" class="form-check-input" name="answer" value="${i}" ${checked}>
-                    <label class="form-check-label">${option}</label>
-                </div>
-            `);
-        });
-
-        $("#prevBtn").prop("disabled", currentIndex === 0);
-        $("#nextBtn").text(
-            currentIndex === quizData.length - 1 ? "Submit" : "Next"
-        );
-    }
-
-    function validateAnswer() {
-        let selected = $("input[name='answer']:checked").val();
-        if (selected === undefined) {
-            alert("Please select an answer!");
-            return false;
-        }
-        userAnswers[currentIndex] = parseInt(selected);
-        return true;
-    }
-
-    $("#nextBtn").click(function () {
-        if (!validateAnswer()) return;
-
-        if (currentIndex < quizData.length - 1) {
-            currentIndex++;
-            loadQuestion();
-        } else {
-            showResult();
-        }
-    });
-
-    $("#prevBtn").click(function () {
-        if (currentIndex > 0) {
-            currentIndex--;
-            loadQuestion();
-        }
-    });
-
-    function showResult() {
-        let correct = 0;
-
-        $.each(quizData, function (i, q) {
-            if (userAnswers[i] === q.correct) correct++;
-        });
-
-        let total = quizData.length;
-        let wrong = total - correct;
-
-        $("#quiz-section").hide();
-        $("#correctCount").text("Correct Answers : " + correct);
-        $("#wrongCount").text("Wrong Answers : " + wrong);
-        $("#totalCount").text("Total Questions : " + total);
-
-        $("#result-section").removeClass("d-none");
-    }
-
-    $("#restartBtn").click(function () {
-        location.reload();
-    });
+// count
+$scope.completedCount=()=> $scope.tasks.filter(t=>t.done).length;
+$scope.pendingCount=()=> $scope.tasks.filter(t=>!t.done).length;
 
 });
 </script>
 
 </body>
 </html>
+i want slight modify in this code like css
