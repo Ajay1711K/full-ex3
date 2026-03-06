@@ -1,315 +1,111 @@
 <!DOCTYPE html>
-<html ng-app="taskApp">
+<html lang="en" ng-app="taskApp">
 <head>
-<meta charset="UTF-8">
-<title>TaskMaster Hub</title>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <meta charset="UTF-8">
+    <title>TaskMaster Hub - To Do List</title>
 
-<style>
+    <!-- AngularJS CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 
-/* -------- GLOBAL -------- */
-body{
-  margin:0;
-  font-family:Segoe UI, Arial;
-  background:linear-gradient(120deg,#4facfe,#00f2fe);
-  color:white;
-}
-
-/* -------- APP LAYOUT -------- */
-.app{
-  display:flex;
-  height:100vh;
-}
-
-/* -------- SIDEBAR -------- */
-.sidebar{
-  width:220px;
-  background:#0f172a;
-  padding:20px;
-  box-shadow:2px 0 10px rgba(0,0,0,0.3);
-}
-.sidebar h2{
-  text-align:center;
-  margin-bottom:30px;
-  color:#38bdf8;
-}
-
-.menu{
-  margin:12px 0;
-  padding:12px;
-  border-radius:8px;
-  cursor:pointer;
-  transition:0.3s;
-}
-
-.menu:hover{
-  background:#1e293b;
-  padding-left:18px;
-}
-
-/* -------- MAIN AREA -------- */
-.main{
-  flex:1;
-  padding:30px 40px;
-}
-
-/* -------- TOP BAR -------- */
-.topbar{
-  font-size:24px;
-  font-weight:bold;
-  margin-bottom:25px;
-}
-
-/* -------- DASHBOARD -------- */
-.dashboard{
-  display:flex;
-  gap:20px;
-  margin-bottom:25px;
-}
-
-.card{
-  flex:1;
-  background:rgba(255,255,255,0.15);
-  padding:25px;
-  border-radius:15px;
-  text-align:center;
-  backdrop-filter: blur(10px);
-  box-shadow:0 8px 20px rgba(0,0,0,0.2);
-}
-
-/* -------- INPUT -------- */
-.addBox{
-  display:flex;
-  margin:20px 0;
-}
-
-.addBox input{
-  flex:1;
-  padding:12px;
-  border:none;
-  border-radius:10px 0 0 10px;
-  outline:none;
-}
-
-.addBox button{
-  padding:12px 20px;
-  border:none;
-  background:#22c55e;
-  color:white;
-  font-weight:bold;
-  border-radius:0 10px 10px 0;
-  cursor:pointer;
-  transition:0.3s;
-}
-
-.addBox button:hover{
-  background:#16a34a;
-}
-
-/* -------- TASK CARD -------- */
-.task{
-  background:white;
-  color:black;
-  padding:15px;
-  border-radius:12px;
-  margin-bottom:12px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  transition:0.25s;
-  box-shadow:0 4px 10px rgba(0,0,0,0.15);
-}
-
-.task:hover{
-  transform:scale(1.02);
-}
-
-.done{
-  text-decoration:line-through;
-  color:gray;
-}
-
-/* -------- BUTTONS -------- */
-.btn{
-  border:none;
-  padding:7px 12px;
-  border-radius:6px;
-  margin-left:5px;
-  cursor:pointer;
-  color:white;
-  transition:0.3s;
-}
-
-.edit{
-  background:#3b82f6;
-}
-
-.edit:hover{
-  background:#2563eb;
-}
-
-.delete{
-  background:#ef4444;
-}
-
-.delete:hover{
-  background:#dc2626;
-}
-
-/* -------- FILTER -------- */
-.filter button{
-  margin-right:10px;
-  margin-bottom:10px;
-  border:none;
-  padding:8px 16px;
-  border-radius:20px;
-  cursor:pointer;
-  background:#0f172a;
-  color:white;
-  transition:0.3s;
-}
-
-.filter button:hover{
-  background:#1e293b;
-}
-/* -------- TASK CARD -------- */
-.task{
-  background:white;
-  color:black;
-  padding:15px;
-  border-radius:12px;
-  margin-bottom:12px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  transition:0.3s;
-}
-.task:hover{
-  transform:scale(1.02);
-}
-.done{
-  text-decoration:line-through;
-  color:gray;
-}
-
-/* -------- BUTTONS -------- */
-.btn{
-  border:none;
-  padding:6px 10px;
-  border-radius:6px;
-  margin-left:5px;
-  cursor:pointer;
-  color:white;
-}
-.edit{background:#3b82f6;}
-.delete{background:#ef4444;}
-.filter button{
-  margin-right:10px;
-  margin-bottom:10px;
-  border:none;
-  padding:8px 15px;
-  border-radius:20px;
-  cursor:pointer;
-  background:#111827;
-  color:white;
-}
-
-</style>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            padding: 40px;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        h2 {
+            text-align: center;
+        }
+        input[type="text"] {
+            width: 70%;
+            padding: 8px;
+        }
+        button {
+            padding: 8px 10px;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+        .completed {
+            text-decoration: line-through;
+            color: gray;
+        }
+    </style>
 </head>
 
-<body ng-controller="taskCtrl">
+<body ng-controller="taskController">
 
-<div class="app">
-
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <h2>TaskMaster</h2>
-    <div class="menu">Dashboard</div>
-    <div class="menu">Tasks</div>
-    <div class="menu">Settings</div>
-  </div>
-
-  <!-- Main -->
-  <div class="main">
-
-    <div class="topbar">My Tasks</div>
-
-    <!-- Dashboard -->
-    <div class="dashboard">
-      <div class="card">Total Tasks<br><h2>{{tasks.length}}</h2></div>
-      <div class="card">Completed<br><h2>{{completedCount()}}</h2></div>
-      <div class="card">Pending<br><h2>{{pendingCount()}}</h2></div>
-    </div>
+<div class="container">
+    <h2>TaskMaster Hub</h2>
 
     <!-- Add Task -->
-    <div class="addBox">
-      <input type="text" ng-model="newTask" placeholder="Enter task...">
-      <button ng-click="addTask()">Add</button>
-    </div>
+    <input type="text" ng-model="newTask" placeholder="Enter new task">
+    <button ng-click="addTask()">Add</button>
 
-    <!-- Filter -->
-    <div class="filter">
-      <button ng-click="status=''">All</button>
-      <button ng-click="status=false">Pending</button>
-      <button ng-click="status=true">Completed</button>
-    </div>
+    <br><br>
 
-    <!-- Tasks -->
-    <div class="task" ng-repeat="t in tasks | filter:{done:status}">
-      
-      <div>
-        <input type="checkbox" ng-model="t.done">
-        <span ng-class="{'done':t.done}">
-          {{t.name}}
-        </span>
-      </div>
+    <!-- Filter Buttons -->
+    <button ng-click="filterStatus = ''">All</button>
+    <button ng-click="filterStatus = false">Pending</button>
+    <button ng-click="filterStatus = true">Completed</button>
 
-      <div>
-        <button class="btn edit" ng-click="editTask(t)">Edit</button>
-        <button class="btn delete" ng-click="deleteTask($index)">Delete</button>
-      </div>
+    <br><br>
 
-    </div>
+    <!-- Task List -->
+    <ul>
+        <li ng-repeat="task in tasks | filter:{completed: filterStatus}">
+            <input type="checkbox" ng-model="task.completed">
 
-  </div>
+            <span ng-class="{completed: task.completed}">
+                {{task.name}}
+            </span>
+
+            <button ng-click="editTask(task)">Edit</button>
+            <button ng-click="deleteTask($index)">Delete</button>
+        </li>
+    </ul>
 </div>
 
 <script>
-angular.module("taskApp",[])
-.controller("taskCtrl",function($scope){
+    // AngularJS Application
+    var app = angular.module("taskApp", []);
 
-$scope.tasks=[
-  {name:"Design UI",done:false},
-  {name:"Write Code",done:true},
-  {name:"Test App",done:false}
-];
+    app.controller("taskController", function($scope) {
 
-// add
-$scope.addTask=function(){
-  if($scope.newTask){
-    $scope.tasks.push({name:$scope.newTask,done:false});
-    $scope.newTask="";
-  }
-};
+        // Task list
+        $scope.tasks = [];
 
-// delete
-$scope.deleteTask=function(i){
-  $scope.tasks.splice(i,1);
-};
+        // Add Task
+        $scope.addTask = function() {
+            if ($scope.newTask) {
+                $scope.tasks.push({
+                    name: $scope.newTask,
+                    completed: false
+                });
+                $scope.newTask = "";
+            }
+        };
 
-// edit
-$scope.editTask=function(task){
-  let updated=prompt("Edit Task",task.name);
-  if(updated!==null) task.name=updated;
-};
+        // Delete Task
+        $scope.deleteTask = function(index) {
+            $scope.tasks.splice(index, 1);
+        };
 
-// count
-$scope.completedCount=()=> $scope.tasks.filter(t=>t.done).length;
-$scope.pendingCount=()=> $scope.tasks.filter(t=>!t.done).length;
-
-});
+        // Edit Task
+        $scope.editTask = function(task) {
+            var updatedTask = prompt("Edit task", task.name);
+            if (updatedTask !== null) {
+                task.name = updatedTask;
+            }
+        };
+    });
 </script>
 
 </body>
 </html>
-i want slight modify in this code like css
